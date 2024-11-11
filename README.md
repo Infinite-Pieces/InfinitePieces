@@ -1,6 +1,5 @@
 Certainly! Here's the complete README file in Markdown format:
 
-```markdown
 # Infinite Pieces - Setup Instructions
 
 This README provides step-by-step instructions to set up and run the Infinite Pieces project on your local machine.
@@ -16,9 +15,6 @@ Before you begin, ensure you have the following installed:
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/your-username/infinite-pieces.git
-   ```
 
 2. Navigate to the project directory:
 
