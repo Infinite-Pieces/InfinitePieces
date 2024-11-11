@@ -47,6 +47,24 @@ After starting the server, you can access the following routes in your browser:
 - Checkout: `http://localhost:5173/checkout`
 - Account: `http://localhost:5173/account`
 
+The above isn't needed. You can navigate around on your own. However, this is a shortcut. 
+
+## Navigation
+
+There is no signup page yet. Just type in some random email and password into the login page.
+The first page you will see is the dashboard. All buttons are functional. Account page works, including account settings.
+Generating an image will bring you do a new page with more customization. Including different AI's, helpful prompts and puzzle type. 
+Code for DALLE-3 to run is present, but currently lacks hte API key and an update .env file. 
+All dependencies for DALLE to run and for .env to run, will be downloaded when you do:
+```bash
+npm install
+```
+When on the generate page, you can click on the helpful prompts on the side and they will automatically get added to the AI prompt location.
+You can also bookmark the prompts (not fully implemented yet).
+
+On the dashboard page. You cannot click on the 'proceed to checkout' until you have uploaded your own photo and have selected the size you want. 
+A persons email is saved to the account settings page and a username is automatically made based off the email. 
+
 ## Troubleshooting
 
 If you encounter any issues while setting up or running the project, try the following:
