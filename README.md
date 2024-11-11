@@ -65,6 +65,8 @@ You can also bookmark the prompts (not fully implemented yet).
 On the dashboard page. You cannot click on the 'proceed to checkout' until you have uploaded your own photo and have selected the size you want. 
 A persons email is saved to the account settings page and a username is automatically made based off the email. 
 
+When an AI image is generated. The tokens for each person will drop by one. When the AI's are implemented. Each token will generate 4 photos, so 10 tokens can generate 40 images. 
+
 ## Troubleshooting
 
 If you encounter any issues while setting up or running the project, try the following:
