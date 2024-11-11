@@ -1,5 +1,3 @@
-Certainly! Here's the complete README file in Markdown format:
-
 # Infinite Pieces - Setup Instructions
 
 This README provides step-by-step instructions to set up and run the Infinite Pieces project on your local machine.
