@@ -23,3 +23,23 @@ docker compose up --build
 After starting the server, you can access the following routes in your browser:
 - Frontend: `http://localhost:5173`
 - Database Management System: `http://localhost:8080`
+
+## Linter
+#### Frontend:
+- To check for errors run:
+```
+npx eslint src/**/*.js
+```
+- To fix errors run:
+```
+npx eslint src/**/*.js --fix
+```
+#### Backend
+- To check for errors run:
+```
+npx eslint **.js
+```
+- To fix errors run:
+```
+npx eslint **.js --fix
+```
