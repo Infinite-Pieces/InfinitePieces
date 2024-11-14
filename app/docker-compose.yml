@@ -1,4 +1,4 @@
-version: '1'
+version: '3.8'
 services:
   frontend:
     build:
@@ -12,6 +12,31 @@ services:
     networks:
       - app-net
 
+  database:
+    image: postgres:13
+    container_name: postgres-database
+    env_file:
+      - ./database/.env
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - app-net
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: postgres-DBMS
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ct@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"  # Access DBMS at http://localhost:8080 using the credentials above
+    depends_on:
+      - database
+    networks:
+      - app-net
+
   backend:
     build:
       context: ./backend
@@ -19,6 +44,10 @@ services:
     container_name: backend
     ports:
       - "3000:3000"
+    depends_on:
+      - database
+    env_file:
+      - ./backend/.env
     networks:
       - app-net
 
