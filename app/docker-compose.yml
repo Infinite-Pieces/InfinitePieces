@@ -7,20 +7,20 @@ services:
     container_name: frontend
     ports:
       - "5173:5173"
-    # depends_on:
-    #   - backend
+    depends_on:
+      - backend
     networks:
       - app-net
 
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   container_name: backend
-  #   ports:
-  #     - "5000:5000"
-  #   networks:
-  #     - app-net
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-net
 
 networks:
   app-net:

@@ -1,6 +1,6 @@
 FROM node:20.14.0-buster as build
 
-WORKDIR /app
+WORKDIR /app/frontend
 
 COPY package.json package-lock.json ./
 
