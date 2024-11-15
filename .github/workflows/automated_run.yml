@@ -30,4 +30,8 @@ jobs:
       - name: Run ESLint
         run: |
           cd ${{ matrix.directory }}
-          npx eslint src/**/*.js
+          if [ "${{ matrix.directory }}" == "frontend" ]; then
+            npx eslint src/**/*.js
+          elif [ "${{ matrix.directory }}" == "backend" ]; then
+            npx eslint **/*.js --fix
+          fi
