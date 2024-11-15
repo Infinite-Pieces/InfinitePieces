@@ -33,5 +33,5 @@ jobs:
           if [ "${{ matrix.directory }}" == "frontend" ]; then
             npx eslint src/**/*.js
           elif [ "${{ matrix.directory }}" == "backend" ]; then
-            npx eslint **/*.js --fix
+            npx eslint **.js
           fi
