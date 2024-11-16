@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        directory: [app/frontend, app/backend]
+        directory: [app/frontend, app/backend, app/admin-backend]
 
     steps:
       - name: Checkout code
@@ -33,5 +33,7 @@ jobs:
           if [ "${{ matrix.directory }}" == "app/frontend" ]; then
             npx eslint src/**/*.js
           elif [ "${{ matrix.directory }}" == "app/backend" ]; then
+            npx eslint **.js
+          elif [ "${{ matrix.directory }}" == "app/admin-backend" ]; then
             npx eslint **.js
           fi
