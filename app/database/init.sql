@@ -1,3 +1,6 @@
+-- Note for later: Look into using indexes for performance optimization in database queries
+
+
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -223,6 +226,15 @@ CREATE TABLE Email_Subscriptions (
     updated_by INT REFERENCES Users(user_id)
 );
 
+CREATE TABLE Example_Prompts (
+    prompt_id SERIAL PRIMARY KEY,
+    category VARCHAR(50) NOT NULL, -- Category for grouping prompts (e.g., "Nature", "Abstract", "Digital Art", "Cartoon")
+    prompt_text TEXT NOT NULL, -- The example prompt text
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE Coupons (
     coupon_id SERIAL PRIMARY KEY,
     code VARCHAR(50) UNIQUE NOT NULL,
@@ -270,12 +282,70 @@ FOR EACH ROW
 EXECUTE FUNCTION increment_coupon_usage();
 
 
-INSERT INTO Coupons (code, description, discount_type, discount_value, min_order_value, max_discount, start_date, end_date, usage_limit)
-VALUES 
-('SAVE10', '10% off on your next order', 'percentage', 10, 20.00, 50.00, '2024-11-01', '2024-12-31', 100),
-('FREESHIP', 'Free shipping on orders over $50', 'fixed', 10, 50.00, NULL, '2024-11-01', '2024-12-31', 200);
+INSERT INTO Users (email, password_hash, email_verified, created_at, updated_at) VALUES
+('colton.p@hotmail.com', 'hashed_password_1', TRUE, '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
+('tannerbjorgan@gmail.com', 'hashed_password_2', TRUE, '2024-01-02 11:00:00', '2024-01-02 11:00:00'),
+('jane.doe@example.com', 'hashed_password_3', TRUE, '2024-01-03 12:00:00', '2024-01-03 12:00:00'),
+('john.smith@example.com', 'hashed_password_4', TRUE, '2024-01-04 13:00:00', '2024-01-04 13:00:00');
 
 
-INSERT INTO users VALUES(first_name, last_name, email, password) VALUES
-('Colton', 'Palfrey', 'colton.p@hotmail.com', 'password'),
-('Tanner', 'Bjorgan', 'tannerbjorgan@gmail.com', 'password');
+INSERT INTO Products (product_name, product_type, description, base_price, sale_price, stock_quantity, is_available, created_at, updated_at) VALUES
+('Custom AI Mug', 'mug', 'A high-quality mug with AI-generated artwork.', 15.99, 12.99, 50, TRUE, '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
+('AI Poster', 'poster', 'A unique poster featuring AI art.', 25.99, 20.99, 30, TRUE, '2024-01-02 11:00:00', '2024-01-02 11:00:00'),
+('T-Shirt', 'shirt', 'Comfortable t-shirt with AI-generated design.', 19.99, 15.99, 100, TRUE, '2024-01-03 12:00:00', '2024-01-03 12:00:00'),
+('Puzzle', 'puzzle', 'A 500-piece puzzle with AI art.', 29.99, NULL, 25, TRUE, '2024-01-04 13:00:00', '2024-01-04 13:00:00');
+
+
+INSERT INTO Product_Price_History (product_id, old_price, new_price, change_date, changed_by) VALUES
+(1, 18.99, 15.99, '2024-01-05 14:00:00', 1),
+(2, 30.99, 25.99, '2024-01-06 15:00:00', 1),
+(3, 22.99, 19.99, '2024-01-07 16:00:00', 1);
+
+
+INSERT INTO Coupons (code, description, discount_type, discount_value, min_order_value, max_discount, start_date, end_date, usage_limit, is_active, created_at, updated_at) VALUES
+('SAVE20', '20% off your order', 'percentage', 20, 50.00, NULL, '2024-01-01', '2024-12-31', 100, TRUE, '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
+('FREESHIP', 'Free shipping for orders over $50', 'fixed', 10, 50.00, NULL, '2024-01-01', '2024-12-31', 200, TRUE, '2024-01-02 11:00:00', '2024-01-02 11:00:00');
+
+
+INSERT INTO Orders (user_id, total_price, order_status, country, coupon_id, discount_applied, created_at, updated_at) VALUES
+(1, 35.97, 'completed', 'Canada', 1, 7.19, '2024-01-05 14:00:00', '2024-01-05 14:00:00'),
+(2, 50.00, 'pending', 'United States', 2, 10.00, '2024-01-06 15:00:00', '2024-01-06 15:00:00'),
+(3, 29.99, 'completed', 'United Kingdom', NULL, 0.00, '2024-01-07 16:00:00', '2024-01-07 16:00:00');
+
+
+INSERT INTO Order_Items (order_id, product_id, quantity, price_per_item, sale_applied, created_at, updated_at) VALUES
+(1, 1, 2, 12.99, TRUE, '2024-01-05 14:00:00', '2024-01-05 14:00:00'),
+(1, 3, 1, 15.99, FALSE, '2024-01-05 14:00:00', '2024-01-05 14:00:00'),
+(2, 2, 2, 20.99, TRUE, '2024-01-06 15:00:00', '2024-01-06 15:00:00'),
+(3, 4, 1, 29.99, FALSE, '2024-01-07 16:00:00', '2024-01-07 16:00:00');
+
+
+INSERT INTO Coupon_Usage_History (coupon_id, order_id, user_id, discount_applied, usage_date) VALUES
+(1, 1, 1, 7.19, '2024-01-05 14:00:00'),
+(2, 2, 2, 10.00, '2024-01-06 15:00:00');
+
+
+INSERT INTO AI_Generated_Images (user_id, image_url, prompt, created_at, updated_at) VALUES
+(1, 'https://example.com/images/1.jpg', 'Abstract art of a forest', '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
+(2, 'https://example.com/images/2.jpg', 'Surreal landscape with mountains', '2024-01-02 11:00:00', '2024-01-02 11:00:00'),
+(3, 'https://example.com/images/3.jpg', 'Futuristic cityscape at night', '2024-01-03 12:00:00', '2024-01-03 12:00:00'),
+(4, 'https://example.com/images/4.jpg', 'Ocean view with sunset', '2024-01-04 13:00:00', '2024-01-04 13:00:00');
+
+
+INSERT INTO Email_Subscriptions (user_id, is_subscribed, subscription_date, created_at, updated_at) VALUES
+(1, TRUE, '2024-01-01 10:00:00', '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
+(2, TRUE, '2024-01-02 11:00:00', '2024-01-02 11:00:00', '2024-01-02 11:00:00'),
+(3, FALSE, '2024-01-03 12:00:00', '2024-01-03 12:00:00', '2024-01-03 12:00:00'),
+(4, TRUE, '2024-01-04 13:00:00', '2024-01-04 13:00:00', '2024-01-04 13:00:00');
+
+INSERT INTO Example_Prompts (category, prompt_text, description, created_at, updated_at) VALUES
+('Nature', 'A serene forest with sunlight filtering through the trees', 'Generates a peaceful and natural woodland scene', '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
+('Fantasy', 'A majestic dragon flying over a medieval castle at sunset', 'Perfect for fantasy-themed artwork', '2024-01-01 11:00:00', '2024-01-01 11:00:00'),
+('Abstract', 'An explosion of vibrant colors in a geometric pattern', 'Creates a visually stunning abstract composition', '2024-01-01 12:00:00', '2024-01-01 12:00:00'),
+('Sci-Fi', 'A futuristic cityscape with flying cars and neon lights', 'Ideal for science fiction and futuristic settings', '2024-01-01 13:00:00', '2024-01-01 13:00:00'),
+('Animals', 'A playful kitten in a field of flowers during springtime', 'Captures a cute and charming animal moment', '2024-01-01 14:00:00', '2024-01-01 14:00:00'),
+('Space', 'A distant galaxy with a vibrant nebula and scattered stars', 'For cosmic and interstellar-themed creations', '2024-01-01 15:00:00', '2024-01-01 15:00:00'),
+('Portraits', 'A regal queen with a jeweled crown and flowing robes', 'For creating royal and elegant portraiture', '2024-01-01 16:00:00', '2024-01-01 16:00:00'),
+('Minimalist', 'A single tree on a hill under a clear blue sky', 'Generates a clean and simple minimalist design', '2024-01-01 17:00:00', '2024-01-01 17:00:00'),
+('Food', 'A stack of fluffy pancakes with syrup and berries', 'Perfect for food-related designs and themes', '2024-01-01 18:00:00', '2024-01-01 18:00:00'),
+('Adventure', 'A lone hiker standing at the edge of a vast canyon', 'Captures a sense of exploration and adventure', '2024-01-01 19:00:00', '2024-01-01 19:00:00');
