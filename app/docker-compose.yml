@@ -51,6 +51,20 @@ services:
     networks:
       - app-net
 
+  admin-backend:
+    build:
+      context: ./admin-backend
+      dockerfile: Dockerfile
+    container_name: admin-backend
+    ports:
+      - "6000:6000"
+    depends_on:
+      - database
+    env_file:
+      - ./admin-backend/.env
+    networks:
+      - app-net
+
 networks:
   app-net:
     driver: bridge
