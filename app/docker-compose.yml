@@ -14,7 +14,7 @@ services:
 
   database:
     image: postgres:13
-    container_name: postgres-database
+    container_name: postgres-database # Host name/address to use for DBMS server connection
     env_file:
       - ./database/.env
     volumes:
