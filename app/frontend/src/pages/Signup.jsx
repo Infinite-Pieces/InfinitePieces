@@ -1,36 +1,55 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/card';
 import { Button } from '../components/ui/button';
-import { Mail, Lock, Store } from 'lucide-react';
+import { Mail, Lock, User } from 'lucide-react';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const Signup = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
   const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Get the page they tried to visit or default to home
-  const from = location.state?.from?.pathname || '/home';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
-    if (!email || !password) {
+
+    // Basic validation
+    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
 
-    try {
-      await login(email, password);
-      navigate(from, { replace: true });
-    } catch (err) {
-      setError('Failed to sign in');
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
     }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
+    try {
+      // Here you would typically make an API call to register the user
+      login(formData.email, formData.password);
+      navigate('/home');
+    } catch (err) {
+      setError('Failed to create account');
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   return (
@@ -41,17 +60,14 @@ const Login = () => {
             <svg 
               className="h-8 w-8 text-indigo-600" 
               viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2"
+              fill="currentColor"
             >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-              <path d="M12 22V7" />
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
             <CardTitle className="text-2xl text-indigo-600">Infinite Pieces</CardTitle>
           </div>
           <CardDescription>
-            Sign in to create your custom puzzles
+            Create an account to start making puzzles
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -64,29 +80,56 @@ const Login = () => {
             
             <div className="space-y-4">
               <div className="relative">
+                <User className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="relative">
                 <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <input
                   type="email"
+                  name="email"
                   placeholder="Email"
                   className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={formData.email}
+                  onChange={handleChange}
                 />
               </div>
+
               <div className="relative">
                 <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
                 <input
                   type="password"
+                  name="password"
                   placeholder="Password"
                   className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                 />
               </div>
             </div>
 
             <Button className="w-full" type="submit">
-              Sign In
+              Create Account
             </Button>
 
             <div className="relative">
@@ -112,9 +155,9 @@ const Login = () => {
         </form>
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-center text-gray-500">
-            Don't have an account?{' '}
-            <Link to="/signup" className="text-indigo-600 hover:text-indigo-500">
-              Sign up
+            Already have an account?{' '}
+            <Link to="/login" className="text-indigo-600 hover:text-indigo-500">
+              Sign in
             </Link>
           </div>
           <div className="text-sm text-center">
@@ -128,4 +171,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
