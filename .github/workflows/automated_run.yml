@@ -48,6 +48,10 @@ jobs:
       - name: Set up Docker Compose
         run: sudo apt-get update && sudo apt-get install docker-compose -y
 
+      - name: Write database .env file
+        run: |
+          echo "${{ secrets.DATABASE_ENV }}" > app/database/.env
+
       - name: Start Docker Compose services
         run: |
           docker-compose -f app/docker-compose.yml up -d
