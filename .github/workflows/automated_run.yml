@@ -1,4 +1,4 @@
-name: Automated Code Quality Checks
+name: Automated Code Quality and Tests
 
 on:
   pull_request:
@@ -37,3 +37,32 @@ jobs:
           elif [ "${{ matrix.directory }}" == "app/admin-backend" ]; then
             npx eslint **.js
           fi
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Compose
+        run: sudo apt-get update && sudo apt-get install docker-compose -y
+
+      - name: Start Docker Compose services
+        run: |
+          docker-compose -f app/docker-compose.yml up -d
+
+      - name: Install test dependencies
+        run: |
+          cd tests
+          npm install
+
+      - name: Run tests
+        run: |
+          cd tests
+          npm test
+
+      - name: Stop Docker Compose services
+        if: always()
+        run: |
+          docker-compose -f app/docker-compose.yml down

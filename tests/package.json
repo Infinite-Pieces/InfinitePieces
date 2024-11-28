@@ -1,9 +1,10 @@
 {
   "name": "tests",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive backend-tests/**/*.test.js"
+    "test": "mocha \"backend-tests/**/*.test.js\" --exit"
   },
   "keywords": [],
   "author": "",
@@ -11,7 +12,10 @@
   "description": "",
   "devDependencies": {
     "chai": "^5.1.2",
+    "chai-http": "^5.1.1",
+    "dotenv": "^16.4.5",
     "mocha": "^10.8.2",
+    "pg": "^8.13.1",
     "supertest": "^7.0.0"
   }
 }
