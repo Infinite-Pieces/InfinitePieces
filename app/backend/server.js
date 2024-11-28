@@ -130,6 +130,8 @@ app.post('/api/auth/logout', (req, res) => {
     });
 });
 
+module.exports = app;
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

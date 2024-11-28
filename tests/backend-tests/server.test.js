@@ -1,10 +1,13 @@
 import { expect } from "chai";
 import dotenv from "dotenv";
 import pkg from "pg";
+import request from "supertest";
 
 dotenv.config();
 
 const { Pool } = pkg;
+
+const API_ADDRESS = "http://localhost:5173/api";
 
 describe("Database Connection", () => {
     let pool;
@@ -33,3 +36,13 @@ describe("Database Connection", () => {
         }
     });
 });
+
+describe("GET /", () => {
+    it("should return a success message", async () => {
+        const res = await request(API_ADDRESS).get("/");
+        expect(res.status).to.equal(200);
+        expect(res.text).to.equal("Backend test message: Hi from Infinite Pieces backend!");
+    });
+});
+
+
