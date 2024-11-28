@@ -28,18 +28,44 @@ After starting the server, you can access the following routes in your browser:
 #### Frontend:
 - To check for errors run:
 ```
-npx eslint src/**/*.js
+cd app/frontend
+npm run lint-check
 ```
 - To fix errors run:
 ```
-npx eslint src/**/*.js --fix
+cd app/frontend
+npm run lint
 ```
 #### Backend
 - To check for errors run:
 ```
-npx eslint **.js
+cd app/backend
+npm run lint-check
 ```
 - To fix errors run:
 ```
-npx eslint **.js --fix
+cd app/backend
+npm run lint
+```
+#### Admin Backend
+- To check for errors run:
+```
+cd app/admin-backend
+npm run lint-check
+```
+- To fix errors run:
+```
+cd app/admin-backend
+npm run lint
+```
+#### Tests
+- To check for errors run:
+```
+cd tests
+npm run lint-check
+```
+- To fix errors run:
+```
+cd tests
+npm run lint
 ```

@@ -1,13 +1,13 @@
-import { expect } from 'chai';
-import dotenv from 'dotenv';
-import pkg from 'pg'; // Correctly import the CommonJS module
+import { expect } from "chai";
+import dotenv from "dotenv";
+import pkg from "pg"; // Correctly import the CommonJS module
 // require('dotenv').config();
 
 dotenv.config();
 
 const { Pool } = pkg;
 
-describe('Database Connection', () => {
+describe("Database Connection", () => {
     let pool;
 
     before(() => {
@@ -24,9 +24,9 @@ describe('Database Connection', () => {
     after(async () => {
         // Close the pool after tests are completed
         await pool.end();
-    });0
+    });0;
 
-    it('should successfully connect to the database', async () => {
+    it("should successfully connect to the database", async () => {
         try {
             const client = await pool.connect();
             expect(client).to.not.be.null;
