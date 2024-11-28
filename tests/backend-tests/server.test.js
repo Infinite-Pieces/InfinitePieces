@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import dotenv from "dotenv";
-import pkg from "pg"; // Correctly import the CommonJS module
-// require('dotenv').config();
+import pkg from "pg";
 
 dotenv.config();
 
@@ -11,7 +10,6 @@ describe("Database Connection", () => {
     let pool;
 
     before(() => {
-        // Initialize the PostgreSQL connection pool
         pool = new Pool({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
@@ -22,7 +20,6 @@ describe("Database Connection", () => {
     });
 
     after(async () => {
-        // Close the pool after tests are completed
         await pool.end();
     });0;
 
@@ -30,7 +27,7 @@ describe("Database Connection", () => {
         try {
             const client = await pool.connect();
             expect(client).to.not.be.null;
-            await client.release(); // Release the client back to the pool
+            await client.release();
         } catch (error) {
             expect.fail(`Database connection failed: ${error.message}`);
         }
