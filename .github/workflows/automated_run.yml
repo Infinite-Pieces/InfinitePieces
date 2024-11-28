@@ -56,6 +56,10 @@ jobs:
         run: |
           echo "${{ secrets.BACKEND_ENV }}" > app/backend/.env
 
+      - name: Write admin-backend .env file
+        run: |
+          echo "${{ secrets.ADMIN_BACKEND_ENV }}" > app/admin-backend/.env
+
       - name: Start Docker Compose services
         run: |
           docker-compose -f app/docker-compose.yml up -d
