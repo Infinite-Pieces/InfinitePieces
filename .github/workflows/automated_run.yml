@@ -1,4 +1,4 @@
-name: Automated Code Quality Checks
+name: Automated Code Quality and Tests
 
 on:
   pull_request:
@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        directory: [app/frontend, app/backend, app/admin-backend]
+        directory: [app/frontend, app/backend, app/admin-backend, tests]
 
     steps:
       - name: Checkout code
@@ -36,4 +36,62 @@ jobs:
             npx eslint **.js
           elif [ "${{ matrix.directory }}" == "app/admin-backend" ]; then
             npx eslint **.js
+          elif [ "${{ matrix.directory }}" == "tests" ]; then
+            npx eslint backend-tests/**/*.js admin-backend-tests/**/*.js
           fi
+
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Compose
+        run: sudo apt-get update && sudo apt-get install docker-compose -y
+
+      - name: Write database .env file
+        run: |
+          echo "${{ secrets.DATABASE_ENV }}" > app/database/.env
+
+      - name: Write backend .env file
+        run: |
+          echo "${{ secrets.BACKEND_ENV }}" > app/backend/.env
+
+      - name: Write admin-backend .env file
+        run: |
+          echo "${{ secrets.ADMIN_BACKEND_ENV }}" > app/admin-backend/.env
+
+      - name: Write tests .env file
+        run: |
+          echo "${{ secrets.TESTS_ENV }}" > tests/.env
+
+      - name: Start Docker Compose services
+        run: |
+          docker-compose -f app/docker-compose.yml up -d
+
+      - name: Wait for database to be ready
+        run: |
+          for i in {1..10}; do
+            nc -zv 127.0.0.1 5432 && echo "Database is ready!" && break
+            echo "Waiting for database to be ready..."
+            sleep 3
+          done
+
+      - name: Debug database logs
+        run: docker logs postgres-database
+
+      - name: Install test dependencies
+        run: |
+          cd tests
+          npm install
+
+      - name: Run tests
+        run: |
+          cd tests
+          npm test
+
+      - name: Stop Docker Compose services
+        if: always()
+        run: |
+          docker-compose -f app/docker-compose.yml down

@@ -1,0 +1,27 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha \"backend-tests/**/*.test.js\" --exit",
+    "lint-check": "eslint backend-tests/**/*.js admin-backend-tests/**/*.js",
+    "lint": "eslint backend-tests/**/*.js admin-backend-tests/**/*.js --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "bcryptjs": "^2.4.3",
+    "chai": "^5.1.2",
+    "chai-http": "^5.1.1",
+    "dotenv": "^16.4.5",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0",
+    "mocha": "^10.8.2",
+    "pg": "^8.13.1",
+    "supertest": "^7.0.0"
+  }
+}

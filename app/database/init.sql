@@ -1,9 +1,12 @@
 -- Note for later: Look into using indexes for performance optimization in database queries
 
+SET TIME ZONE 'America/Vancouver';
 
 CREATE TABLE Users (
     user_id SERIAL PRIMARY KEY,
-    email VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     email_verified BOOLEAN DEFAULT FALSE, -- Track if the email is verified
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -18,26 +21,14 @@ CREATE TABLE Users (
     archived_by INT REFERENCES Users(user_id)
 );
 
-CREATE TABLE User_Sessions (
-    session_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES Users(user_id), 
-    session_token VARCHAR(255) NOT NULL, 
-    ip_address VARCHAR(45), 
-    user_agent TEXT, 
-    is_active BOOLEAN DEFAULT TRUE, 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_active_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    expired_at TIMESTAMP,
-    terminated_by INT REFERENCES Users(user_id),
-    created_by INT REFERENCES Users(user_id),
-    updated_by INT REFERENCES Users(user_id),
-    deleted_at TIMESTAMP,
-    is_deleted BOOLEAN DEFAULT FALSE,
-    archived_at TIMESTAMP,
-    is_archived BOOLEAN DEFAULT FALSE,
-    deleted_by INT REFERENCES Users(user_id),
-    archived_by INT REFERENCES Users(user_id)
-);
+CREATE TABLE "User_Sessions" (
+    "sid" varchar NOT NULL COLLATE "default",
+    "sess" json NOT NULL,
+    "expire" timestamp(6) NOT NULL
+)
+WITH (OIDS=FALSE);
+ALTER TABLE "User_Sessions" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid");
+CREATE INDEX "IDX_session_expire" ON "User_Sessions" ("expire");
 
 CREATE TABLE AI_Generated_Images (
     image_id SERIAL PRIMARY KEY,
@@ -283,11 +274,11 @@ EXECUTE FUNCTION increment_coupon_usage();
 ALTER TABLE Shipping_Info
 ADD COLUMN order_id INT REFERENCES Orders(order_id);
 
-INSERT INTO Users (email, password_hash, email_verified, created_at, updated_at) VALUES
-('colton.p@hotmail.com', 'hashed_password_1', TRUE, '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
-('tannerbjorgan@gmail.com', 'hashed_password_2', TRUE, '2024-01-02 11:00:00', '2024-01-02 11:00:00'),
-('jane.doe@example.com', 'hashed_password_3', TRUE, '2024-01-03 12:00:00', '2024-01-03 12:00:00'),
-('john.smith@example.com', 'hashed_password_4', TRUE, '2024-01-04 13:00:00', '2024-01-04 13:00:00');
+INSERT INTO Users (email, firstName, lastName, password_hash, email_verified, created_at, updated_at) VALUES
+('colton.p@hotmail.com', 'Colton', 'Palfrey', 'hashed_password_1', TRUE, '2024-01-01 10:00:00', '2024-01-01 10:00:00'),
+('tannerbjorgan@gmail.com', 'Tanner', 'Bjorgan', 'hashed_password_2', TRUE, '2024-01-02 11:00:00', '2024-01-02 11:00:00'),
+('jane.doe@example.com', 'Jane', 'Doe', 'hashed_password_3', TRUE, '2024-01-03 12:00:00', '2024-01-03 12:00:00'),
+('john.smith@example.com', 'John', 'Smith', 'hashed_password_4', TRUE, '2024-01-04 13:00:00', '2024-01-04 13:00:00');
 
 
 INSERT INTO Products (product_name, product_type, description, base_price, sale_price, stock_quantity, is_available, created_at, updated_at) VALUES
