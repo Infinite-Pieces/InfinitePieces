@@ -11,7 +11,6 @@ const PgSession = require('connect-pg-simple')(session);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// PostgreSQL connection pool
 const pool = new Pool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -29,11 +28,15 @@ app.use(
         store: new PgSession({
             pool,
             tableName: 'User_Sessions',
+            createTableIfMissing: true,
         }),
-        secret: 'your_secret_key',
+        secret: process.env.SECRET_KEY,
         resave: false,
         saveUninitialized: false,
-        cookie: { secure: false }, // Set to true only when we end up using HTTPS
+        cookie: { 
+            secure: false, // Set to true only when we end up using HTTPS
+            maxAge: 24 * 60 * 60 * 1000, // 1 day expiration
+        }, 
     })
 );
 
@@ -49,13 +52,12 @@ passport.use(
 
             const user = userResult.rows[0];
 
-            // Verify password
             const isPasswordValid = await bcrypt.compare(password, user.password_hash);
             if (!isPasswordValid) {
                 return done(null, false, { message: 'Incorrect email or password.' });
             }
 
-            return done(null, user); // Pass user object to the next middleware
+            return done(null, user);
         } catch (error) {
             console.error('Error in LocalStrategy:', error);
             return done(error);
@@ -63,12 +65,10 @@ passport.use(
     })
 );
 
-// Serialize user
 passport.serializeUser((user, done) => {
     done(null, user.user_id);
 });
 
-// Deserialize user
 passport.deserializeUser(async (id, done) => {
     try {
         const userResult = await pool.query('SELECT * FROM Users WHERE user_id = $1', [id]);
@@ -85,7 +85,7 @@ app.get('/', (req, res) => {
     res.send('Backend test message: Hi from Infinite Pieces backend!');
 });
 
-app.post('/api/auth/signup', async (req, res) => {
+app.post('/auth/signup', async (req, res) => {
     const { email, password, firstName, lastName} = req.body;
     try {
         const userExists = await pool.query('SELECT * FROM Users WHERE email = $1 AND is_deleted = FALSE', [email]);
@@ -96,7 +96,7 @@ app.post('/api/auth/signup', async (req, res) => {
         const passwordHash = await bcrypt.hash(password, 10);
 
         const newUser = await pool.query(
-            `INSERT INTO Users (email, password_hash, firstName, lastName) VALUES ($1, $2) RETURNING user_id`,
+            `INSERT INTO Users (email, password_hash, firstName, lastName) VALUES ($1, $2, $3, $4) RETURNING user_id`,
             [email, passwordHash, firstName, lastName]
         );
 
@@ -107,13 +107,11 @@ app.post('/api/auth/signup', async (req, res) => {
     }
 });
 
-
-app.post('/api/auth/login', passport.authenticate('local'), (req, res) => {
+app.post('/auth/login', passport.authenticate('local'), (req, res) => {
     res.json({ message: 'Login successful', user: req.user });
 });
 
-
-app.get('/api/auth/user', (req, res) => {
+app.get('/auth/user', (req, res) => {
     if (!req.isAuthenticated()) {
         return res.status(401).json({ error: 'Unauthorized' });
     }
@@ -121,7 +119,7 @@ app.get('/api/auth/user', (req, res) => {
 });
 
 
-app.post('/api/auth/logout', (req, res) => {
+app.post('/auth/logout', (req, res) => {
     req.logout((err) => {
         if (err) {
             return res.status(500).json({ error: 'Error during logout' });
