@@ -79,7 +79,7 @@ const GenerateImage = () => {
   const handleGenerate = () => {
     if (user.tokens > 0 && selectedAI && prompt) {
       updateTokens(user.tokens - 1);
-      navigate('/');
+      navigate('/product-preview');
     }
   };
 
