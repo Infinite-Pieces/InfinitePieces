@@ -10,7 +10,7 @@ const cors = require('cors');
 const PgSession = require('connect-pg-simple')(session);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -130,7 +130,6 @@ app.post('/auth/logout', (req, res) => {
 });
 
 app.use('/api/printify', printifyRoutes);
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 module.exports = app;
 

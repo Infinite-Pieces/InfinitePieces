@@ -21,9 +21,11 @@ const ProductPreview = () => {
       try {
         setIsLoading(true);
         const data = await fetchPrintifyProducts();
-        setProducts(data.blueprints);
+        console.log('API Response:', data);
+        setProducts(data);
       } catch (err) {
         setError('Failed to load products');
+        console.error("Error loading products", err);
       } finally {
         setIsLoading(false);
       }
@@ -41,12 +43,15 @@ const ProductPreview = () => {
       // Get detailed product information
       const details = await getProductDetails(product.id);
       setProductDetails(details);
+      console.log('Product details:', details);
 
       // Get available print providers
       const providers = await getPrintProviders(product.id);
       setPrintProviders(providers);
+      console.log('Print providers:', providers);
     } catch (err) {
       setError('Failed to load product details');
+      console.error("Error getting product details", err);
     } finally {
       setIsLoading(false);
     }
@@ -79,14 +84,14 @@ const ProductPreview = () => {
             <CardContent>
               {selectedImage && (
                 <div className="relative">
-                  <img 
-                    src={selectedImage} 
-                    alt="Your design" 
+                  <img
+                    src={selectedImage}
+                    alt="Your design"
                     className="w-full rounded-lg"
                   />
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="absolute top-2 right-2"
                     onClick={() => setSelectedImage(null)}
                   >
@@ -106,29 +111,32 @@ const ProductPreview = () => {
               {isLoading ? (
                 <div className="text-center py-4">Loading products...</div>
               ) : (
-                <div className="space-y-2">
-                  {products.map((product) => (
-                    <button
-                      key={product.id}
-                      onClick={() => handleProductSelect(product)}
-                      className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${
-                        selectedProduct?.id === product.id
+                <>
+                  {Array.isArray(products) && products.length > 0 ? (
+                    products.map((product) => (
+                      <button
+                        key={product.id}
+                        onClick={() => handleProductSelect(product)}
+                        className={`w-full flex items-center justify-between p-3 rounded-lg border transition-colors ${selectedProduct?.id === product.id
                           ? 'border-indigo-500 bg-indigo-50'
                           : 'hover:border-gray-300'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <img 
-                          src={product.thumbnail_url} 
-                          alt={product.title}
-                          className="w-8 h-8 object-cover rounded"
-                        />
-                        <span>{product.title}</span>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-gray-400" />
-                    </button>
-                  ))}
-                </div>
+                          }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <img
+                            src={product.thumbnail_url}
+                            alt={product.title}
+                            className="w-8 h-8 object-cover rounded"
+                          />
+                          <span>{product.title}</span>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                      </button>
+                    ))
+                  ) : (
+                    <p>No products available</p>
+                  )}
+                </>
               )}
             </CardContent>
           </Card>
@@ -140,7 +148,7 @@ const ProductPreview = () => {
             <CardHeader>
               <CardTitle>Product Preview</CardTitle>
               <CardDescription>
-                {selectedProduct 
+                {selectedProduct
                   ? selectedProduct.title
                   : 'Select a product to preview your design'}
               </CardDescription>
@@ -151,17 +159,18 @@ const ProductPreview = () => {
               ) : selectedProduct ? (
                 <div className="space-y-6">
                   {/* Product Images */}
-                  <div className="aspect-video bg-gray-100 rounded-lg">
-                    {productDetails?.images.map((image, index) => (
-                      <img
-                        key={index}
-                        src={image.url}
-                        alt={`${selectedProduct.title} view ${index + 1}`}
-                        className="w-full h-full object-contain"
-                      />
-                    ))}
-                  </div>
-
+                  {productDetails?.images && (
+                    <div className="aspect-video bg-gray-100 rounded-lg">
+                      {productDetails.images.map((image, index) => (
+                        <img
+                          key={index}
+                          src={image.url}
+                          alt={`${selectedProduct.title} view ${index + 1}`}
+                          className="w-full h-full object-contain"
+                        />
+                      ))}
+                    </div>
+                  )}
                   {/* Product Variants */}
                   {productDetails?.variants && (
                     <div>
@@ -181,7 +190,7 @@ const ProductPreview = () => {
                   )}
 
                   {/* Print Providers */}
-                  {printProviders.length > 0 && (
+                  {printProviders && printProviders.length > 0 && (
                     <div>
                       <h3 className="font-medium mb-2">Print Providers</h3>
                       <div className="space-y-2">
