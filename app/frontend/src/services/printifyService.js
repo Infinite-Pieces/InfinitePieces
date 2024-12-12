@@ -1,16 +1,11 @@
-const PRINTIFY_API_URL = 'https://api.printify.com/v1';
-const PRINTIFY_TOKEN = process.env.REACT_APP_PRINTIFY_TOKEN;
-
-
 export const fetchPrintifyProducts = async () => {
   try {
-    const response = await fetch(`${PRINTIFY_API_URL}/catalog/blueprints.json`, {
+    const response = await fetch('/api/printify/products', {
       headers: {
-        'Authorization': `Bearer ${PRINTIFY_TOKEN}`,
         'Content-Type': 'application/json'
       }
     });
-    
+
     if (!response.ok) {
       throw new Error('Failed to fetch products');
     }

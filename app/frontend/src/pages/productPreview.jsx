@@ -21,7 +21,7 @@ const ProductPreview = () => {
       try {
         setIsLoading(true);
         const data = await fetchPrintifyProducts();
-        setProducts(data);
+        setProducts(data.blueprints);
       } catch (err) {
         setError('Failed to load products');
       } finally {
