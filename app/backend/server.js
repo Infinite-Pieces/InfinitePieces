@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const printifyRoutes = require('./routes/printify');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -127,6 +128,9 @@ app.post('/auth/logout', (req, res) => {
         res.json({ message: 'Logout successful' });
     });
 });
+
+app.use('/api/printify', printifyRoutes);
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 module.exports = app;
 
