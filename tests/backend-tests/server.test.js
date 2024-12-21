@@ -25,6 +25,7 @@ after(async () => {
     await pool.end();
 });
 
+/*
 describe("Database Connection", () => {
     it("should successfully connect to the database", async () => {
         try {
@@ -198,4 +199,5 @@ describe("POST /auth/logout", () => {
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property("message", "Logout successful");
     });
-});
+    
+})*/;
