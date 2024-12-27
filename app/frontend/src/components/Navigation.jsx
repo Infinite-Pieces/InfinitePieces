@@ -40,7 +40,7 @@ const Navigation = () => {
                 }`}
               >
                 <Package className="h-4 w-4 inline mr-1" />
-                Create Puzzle
+                Create Your Image
               </Link>
             </div>
           </div>

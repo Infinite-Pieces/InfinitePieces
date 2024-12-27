@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const printifyRoutes = require('./routes/printify');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
@@ -9,7 +10,7 @@ const cors = require('cors');
 const PgSession = require('connect-pg-simple')(session);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 const pool = new Pool({
     host: process.env.DB_HOST,
@@ -127,6 +128,8 @@ app.post('/auth/logout', (req, res) => {
         res.json({ message: 'Logout successful' });
     });
 });
+
+app.use('/api/printify', printifyRoutes);
 
 module.exports = app;
 

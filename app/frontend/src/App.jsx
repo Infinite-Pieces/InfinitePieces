@@ -13,7 +13,7 @@ import Account from './pages/Account';
 import Settings from './pages/Settings';
 import Navigation from './components/Navigation';
 import GenerateImage from './pages/GenerateImage';
-
+import ProductPreview from './pages/productPreview';
 
 
 function App() {
@@ -81,6 +81,18 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route
+            path="/product-preview"
+            element={
+              <ProtectedRoute>
+                <>
+                  <Navigation />
+                  <ProductPreview />
+                </>
+              </ProtectedRoute>
+            }
+          />  
            
         </Routes>
       </div>
