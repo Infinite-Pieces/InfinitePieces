@@ -13,6 +13,13 @@ Before you begin, ensure you have the following installed:
    cd app
    ```
 
+## Environment variables:
+- Add a `.env` file to the following folders and copy and paste the info from their `sample.env` into you r`.env`:
+   - /tests
+   - /app/backend
+   - /app/admin-backend
+   - /app/database
+
 ## Running the Application
 To run the project run the following command:
 ```bash
