@@ -1,19 +1,26 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import ProtectedRoute from './components/RouteProtection/ProtectedRoute';
 import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
 
 //pages 
-import LandingPage from './pages/LandingPage';
-import Dashboard from './pages/Dashboard';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
-import Checkout from './pages/Checkout';
-import Account from './pages/Account';
-import Settings from './pages/Settings';
 import Navigation from './components/Navigation';
+import Account from './pages/Account';
+import Checkout from './pages/Checkout';
+import Dashboard from './pages/Dashboard';
 import GenerateImage from './pages/GenerateImage';
+import LandingPage from './pages/LandingPage';
+import Login from './pages/Login';
 import ProductPreview from './pages/productPreview';
+import Settings from './pages/Settings';
+import Signup from './pages/Signup';
+
+// Admin pages
+import AdminDashboard from './pages/admin/AdminDashboard';
+import CustomerInquiries from './pages/admin/CustomerInquiries';
+import ErrorLogs from './pages/admin/ErrorLogs';
+import IssueReport from './pages/admin/IssueReport';
+import PaymentLog from './pages/admin/PaymentLog';
 
 
 function App() {
@@ -24,6 +31,11 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard/>} />
+          <Route path="/admin-inquiries" element={<CustomerInquiries/>} />
+          <Route path="/admin-errors" element={<ErrorLogs/>} />
+          <Route path="/admin-issues" element={<IssueReport/>} />
+          <Route path="/admin-payments" element={<PaymentLog/>} />
         
           
           <Route
@@ -92,7 +104,18 @@ function App() {
                 </>
               </ProtectedRoute>
             }
-          />  
+          />
+
+          {/* <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute>
+                <>
+                  <AdminDashboard />
+                </>
+              </ProtectedRoute>
+            }
+          /> */}
            
         </Routes>
       </div>
