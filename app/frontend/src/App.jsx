@@ -17,6 +17,10 @@ import Signup from './pages/Signup';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
+import CustomerInquiries from './pages/admin/CustomerInquiries';
+import ErrorLogs from './pages/admin/ErrorLogs';
+import IssueReport from './pages/admin/IssueReport';
+import PaymentLog from './pages/admin/PaymentLog';
 
 
 function App() {
@@ -28,6 +32,10 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin-dashboard" element={<AdminDashboard/>} />
+          <Route path="/admin-inquiries" element={<CustomerInquiries/>} />
+          <Route path="/admin-errors" element={<ErrorLogs/>} />
+          <Route path="/admin-issues" element={<IssueReport/>} />
+          <Route path="/admin-payments" element={<PaymentLog/>} />
         
           
           <Route
